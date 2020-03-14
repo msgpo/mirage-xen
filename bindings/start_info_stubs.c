@@ -32,7 +32,7 @@ CAMLprim value
 caml_cmdline(value v_unit)
 {
   CAMLparam1(v_unit);
-  CAMLreturn(caml_copy_string(cmdline));
+  CAMLreturn(caml_copy_string(&cmdline));
 }
 
 CAMLprim value
