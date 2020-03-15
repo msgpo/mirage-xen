@@ -43,7 +43,7 @@ caml_console_start_page(value v_unit)
   if (hvm_get_parameter(HVM_PARAM_CONSOLE_PFN, &console)) exit(4);
   CAMLreturn(caml_ba_alloc_dims(CAML_BA_UINT8 | CAML_BA_C_LAYOUT,
 				1,
-				(void *)pfn_to_virt(console),
+				(void *)mfn_to_virt(console),
 				(long)PAGE_SIZE));
 }
 
@@ -56,7 +56,7 @@ caml_xenstore_start_page(value v_unit)
   /* FIXME: map this store page somewhere */
   CAMLreturn(caml_ba_alloc_dims(CAML_BA_UINT8 | CAML_BA_C_LAYOUT,
 				1,
-				(void *)pfn_to_virt(store),
+				(void *)mfn_to_virt(store),
 				(long)PAGE_SIZE));
   CAMLreturn(v_unit);
 }
