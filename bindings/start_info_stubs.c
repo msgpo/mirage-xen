@@ -32,7 +32,7 @@ CAMLprim value
 caml_cmdline(value v_unit)
 {
   CAMLparam1(v_unit);
-  CAMLreturn(caml_copy_string(&cmdline));
+  CAMLreturn(caml_copy_string(cmdline));
 }
 
 CAMLprim value
@@ -40,19 +40,10 @@ caml_console_start_page(value v_unit)
 {
   CAMLparam1(v_unit);
   uint64_t console;
-  ///hvm_get_parameter is missing, so construct our own call to HYPERVISOR_hvm_op
-  //code copied from hypervisor.c in minios-xen
-  struct xen_hvm_param xhv;
-  int ret;
-
-  xhv.domid = DOMID_SELF; //known from grant_table.h
-  xhv.index = HVM_PARAM_CONSOLE_PFN;
-  ret = HYPERVISOR_hvm_op(HVMOP_get_param, &xhv);
-  if (ret != 0) exit(4);
-  console = xhv.value;
+  if (hvm_get_parameter(HVM_PARAM_CONSOLE_PFN, &console)) exit(4);
   CAMLreturn(caml_ba_alloc_dims(CAML_BA_UINT8 | CAML_BA_C_LAYOUT,
 				1,
-				pfn_to_virt(console),
+				(void *)pfn_to_virt(console),
 				(long)PAGE_SIZE));
 }
 
