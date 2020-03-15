@@ -52,7 +52,9 @@ caml_block_domain(value v_until)
 
 void app_main_thread(void *unused)
 {
+  printk("app_main_thread\n");
   local_irq_save(irqflags);
+  printk("calling caml_startup\n");
   caml_startup(argv);
   _exit(0);
 }
@@ -64,6 +66,7 @@ void minios_show_banner(void)
 
 void start_kernel(void* par)
 {
+  printk("starting kernel\n");
   /* Set up events. */
   init_events();
 
@@ -88,6 +91,7 @@ void start_kernel(void* par)
   gnttab_init();
 
   /* Call our main function directly, without using Mini-OS threads. */
+  printk("calling main now\n");
   app_main_thread(NULL);
 }
 

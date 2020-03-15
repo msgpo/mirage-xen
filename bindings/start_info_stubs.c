@@ -27,11 +27,13 @@
 #include <mini-os/os.h>
 #include <xen/hvm/params.h>
 #include <mini-os/kernel.h>
+#include <mini-os/console.h>
 
 CAMLprim value
 caml_cmdline(value v_unit)
 {
   CAMLparam1(v_unit);
+  printk("caml_cmdline\n");
   CAMLreturn(caml_copy_string(cmdline));
 }
 
@@ -40,6 +42,7 @@ caml_console_start_page(value v_unit)
 {
   CAMLparam1(v_unit);
   uint64_t console;
+  printk("caml_console_start_page\n");
   if (hvm_get_parameter(HVM_PARAM_CONSOLE_PFN, &console)) exit(4);
   CAMLreturn(caml_ba_alloc_dims(CAML_BA_UINT8 | CAML_BA_C_LAYOUT,
 				1,
@@ -52,6 +55,7 @@ caml_xenstore_start_page(value v_unit)
 {
   CAMLparam1(v_unit);
   uint64_t store;
+  printk("caml_xenstore_start_page\n");
   if (hvm_get_parameter(HVM_PARAM_STORE_PFN, &store)) exit(2);
   /* FIXME: map this store page somewhere */
   CAMLreturn(caml_ba_alloc_dims(CAML_BA_UINT8 | CAML_BA_C_LAYOUT,
@@ -65,6 +69,7 @@ CAMLprim value
 caml_xenstore_event_channel(value v_unit)
 {
   CAMLparam1(v_unit);
+  printk("caml_xenstore_event_channel\n");
   uint64_t evtchn;
   if (hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &evtchn)) exit(3);
   CAMLreturn (Val_int(evtchn));
